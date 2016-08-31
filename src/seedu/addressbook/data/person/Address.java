@@ -1,5 +1,6 @@
 package seedu.addressbook.data.person;
 
+import java.util.Objects;
 import seedu.addressbook.data.exception.IllegalValueException;
 
 /**
@@ -8,12 +9,16 @@ import seedu.addressbook.data.exception.IllegalValueException;
  */
 public class Address {
 
-    public static final String EXAMPLE = "123, some street";
+    public static final String EXAMPLE = "123, Some Street, 15-00, 123123";
     public static final String MESSAGE_ADDRESS_CONSTRAINTS = "Person addresses can be in any format";
-    public static final String ADDRESS_VALIDATION_REGEX = ".+";
+    public static final String ADDRESS_VALIDATION_REGEX = "[^,]+, [^,]+, [^,]+, [^,]+";
 
-    public final String value;
     private boolean isPrivate;
+    
+    private final Block block;
+    private final Street street;
+    private final Unit unit;
+    private final PostalCode postalCode;
 
     /**
      * Validates given address.
@@ -25,7 +30,13 @@ public class Address {
         if (!isValidAddress(address)) {
             throw new IllegalValueException(MESSAGE_ADDRESS_CONSTRAINTS);
         }
-        this.value = address;
+        
+        String[] addressComponents = address.split(",");
+        
+        this.block = new Block(addressComponents[0]);
+        this.street = new Street(addressComponents[1]);
+        this.unit = new Unit(addressComponents[2]);
+        this.postalCode = new PostalCode(addressComponents[3]);
     }
 
     /**
@@ -35,21 +46,50 @@ public class Address {
         return test.matches(ADDRESS_VALIDATION_REGEX);
     }
 
-    @Override
+    public Block getBlock() {
+		return block;
+	}
+
+	public Street getStreet() {
+		return street;
+	}
+
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public PostalCode getPostalCode() {
+		return postalCode;
+	}
+
+	@Override
     public String toString() {
-        return value;
+        return String.join(",",
+        		this.getBlock().toString(),
+        		this.getStreet().toString(),
+        		this.getUnit().toString(),
+        		this.getPostalCode().toString());
+    }
+    
+    private boolean isSameStateAs(Address other) {
+        return other == this
+                || (other != null
+                && other.getBlock().equals(this.getBlock())
+                && other.getStreet().equals(this.getStreet())
+                && other.getUnit().equals(this.getUnit())
+                && other.getPostalCode().equals(this.getPostalCode()));
     }
 
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
                 || (other instanceof Address // instanceof handles nulls
-                && this.value.equals(((Address) other).value)); // state check
+                && this.isSameStateAs(((Address) other))); // state check
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return Objects.hash(block, street, unit, postalCode);
     }
 
     public boolean isPrivate() {
