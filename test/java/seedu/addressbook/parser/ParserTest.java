@@ -206,20 +206,24 @@ public class ParserTest {
         final String invalidEmailArg = "e/notAnEmail123";
         final String validEmailArg = "e/" + Email.EXAMPLE;
         final String invalidTagArg = "t/invalid_-[.tag";
+        final String validAddressArg = "a/" + Address.EXAMPLE;
+        final String invalidAddressArg = "a/Address With No! Commas";
 
         // address can be any string, so no invalid address
-        final String addCommandFormatString = "add $s $s $s a/" + Address.EXAMPLE;
+        final String addCommandFormatString = "add %s %s %s %s";
 
         // test each incorrect person data field argument individually
         final String[] inputs = {
                 // invalid name
-                String.format(addCommandFormatString, invalidName, validPhoneArg, validEmailArg),
+        		String.format(addCommandFormatString, invalidName, validPhoneArg, validEmailArg, validAddressArg),
                 // invalid phone
-                String.format(addCommandFormatString, validName, invalidPhoneArg, validEmailArg),
+                String.format(addCommandFormatString, validName, invalidPhoneArg, validEmailArg, validAddressArg),
                 // invalid email
-                String.format(addCommandFormatString, validName, validPhoneArg, invalidEmailArg),
+                String.format(addCommandFormatString, validName, validPhoneArg, invalidEmailArg, validAddressArg),
+                // invalid address
+                String.format(addCommandFormatString, validName, validPhoneArg, validEmailArg, invalidAddressArg),
                 // invalid tag
-                String.format(addCommandFormatString, validName, validPhoneArg, validEmailArg) + " " + invalidTagArg
+                String.format(addCommandFormatString, validName, validPhoneArg, validEmailArg, validAddressArg) + " " + invalidTagArg
         };
         for (String input : inputs) {
             parseAndAssertCommandType(input, IncorrectCommand.class);
@@ -266,7 +270,7 @@ public class ParserTest {
                 + person.getName().fullName
                 + (person.getPhone().isPrivate() ? " pp/" : " p/") + person.getPhone().value
                 + (person.getEmail().isPrivate() ? " pe/" : " e/") + person.getEmail().value
-                + (person.getAddress().isPrivate() ? " pa/" : " a/") + person.getAddress().value;
+                + (person.getAddress().isPrivate() ? " pa/" : " a/") + person.getAddress().toString();
         for (Tag tag : person.getTags()) {
             addCommand += " t/" + tag.tagName;
         }
