@@ -4,6 +4,7 @@ import static seedu.addressbook.common.Messages.*;
 
 import seedu.addressbook.commands.CommandResult;
 import seedu.addressbook.common.Utils;
+import seedu.addressbook.data.person.Printable;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 
 import java.io.InputStream;
@@ -86,6 +87,18 @@ public class TextUi {
 
         showToUser("[Command entered:" + fullInputLine + "]");
         return fullInputLine;
+    }
+    
+    public static String getPrintableString(Printable... printables) {
+    	final StringBuilder builder = new StringBuilder();
+    	
+    	for (Printable printable : printables) {
+    		// spacing between printables
+    		builder.append(" ");
+    		builder.append(printable.getPrintableString());
+    	}
+    	
+    	return builder.toString().trim();
     }
 
 
