@@ -58,12 +58,11 @@ public class Address implements Printable {
 
 	@Override
 	public String getPrintableString() {
-		final StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder("Address: ");
 		if (this.isPrivate) {
 			builder.append("(private) ");
 		}
-		builder.append("Address: ")
-			   .append(this.toString());
+		builder.append(this.toString());
 		return builder.toString();
 	}
 }
