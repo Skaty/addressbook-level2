@@ -19,4 +19,16 @@ public class NameTest {
             e.printStackTrace();
         }
     }
+    
+    @Test
+    public void isSimilar_caseInsensitive() {
+        try {
+            final Name inputName = new Name("JoHn SmIth");
+            final Name otherName = new Name("John Smith");
+            assertTrue(inputName.isSimilar(otherName));
+        } catch (IllegalValueException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }
